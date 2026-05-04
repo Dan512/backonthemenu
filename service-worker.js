@@ -13,7 +13,7 @@
  * Otherwise the SW handles updates transparently — bump unnecessary.
  */
 
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "v3";
 const CACHE_NAME = `botm-${CACHE_VERSION}`;
 const PRECACHE = ["/", "/index.html"];
 
