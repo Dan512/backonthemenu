@@ -1,0 +1,127 @@
+/* src/print.css
+ *
+ * Rules applied only when printing. Loaded via:
+ *   <link rel="stylesheet" href="./print.css" media="print">
+ *
+ * Supplements styles.css — does not replace it. Print-specific overrides only.
+ *
+ * Page size (letter / 4×6 / 5×7) is chosen at runtime by Task 4.3, which
+ * injects an inline @page rule and sets body[data-print=...] before calling
+ * window.print(). The body[data-print="card-4x6"] selectors below provide
+ * the matching visual tightening for card formats.
+ */
+
+@media print {
+  /* Hide all app chrome */
+  .site-header,
+  .site-subheader,
+  .site-nav,
+  .site-controls,
+  .sticky-bar,
+  .active-timers-bar,
+  .cook-mode,
+  .recipe-notes__hint,
+  .chips,
+  #support-btn,
+  button,
+  .btn-ghost,
+  .btn-primary,
+  .btn-cta,
+  [data-link] {
+    display: none !important;
+  }
+
+  /* Recipe-page-specific print hides — scoped to .page-recipe so hiding
+     doesn't accidentally cascade to the shopping list's own .meta line
+     when printing /shopping. */
+  .page-recipe .meta,           /* "45 min · serves 4" line */
+  .page-recipe .on-hand-summary, /* "X of Y ready · need Z more" badge */
+  .page-recipe .ing-marker {     /* ✓ / ○ markers next to ingredient lines */
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+  }
+
+  .page-recipe {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* Tight title-area spacing — title sits close to the recipe content. */
+  h1 { font-size: 18pt; margin-bottom: 4pt; }
+  h2 { font-size: 13pt; margin-top: 8pt; margin-bottom: 2pt; }
+  .description { font-style: italic; margin-bottom: 6pt; }
+
+  .recipe-body {
+    display: block;
+    margin-top: 6pt;
+  }
+  .recipe-body ul,
+  .recipe-body ol {
+    padding-left: 18pt;
+    margin-top: 0;
+  }
+  .recipe-body li {
+    break-inside: avoid;
+    margin-bottom: 1pt;   /* tight line spacing — was 3pt */
+    line-height: 1.25;    /* tighter wrap for multi-line items */
+  }
+
+  /* When On Hand is active, ingredients use a flex layout with a marker
+     column. With the marker hidden in print, normalize back to a standard
+     bulleted list so output looks the same regardless of pantry state. */
+  .ingredients-with-status {
+    list-style: disc;
+    padding-left: 18pt;
+  }
+  .ingredients-with-status li {
+    display: list-item;
+    gap: 0;
+  }
+
+  .disclaimer { font-size: 8pt; color: #888; }
+
+  /* Source attribution: strip link styling (nothing to click on paper) and
+     hide the external-link arrow glyph. */
+  .source-credit { font-size: 8pt; color: #555; margin-top: 6pt; }
+  .source-credit a { color: inherit; border-bottom: none; }
+  .source-credit__arrow { display: none; }
+
+  /* Recipe notes: textarea contents render unreliably across browsers in
+     print, so we hide the textarea and show the .recipe-notes__print
+     sibling that's kept in sync by the recipe page's input handler.
+     Hide the whole section when there are no notes. */
+  .recipe-notes textarea { display: none !important; }
+  .recipe-notes--empty { display: none !important; }
+  .recipe-notes__print {
+    display: block;
+    white-space: pre-wrap;  /* preserve user's line breaks */
+    font-size: 10pt;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Default page size (overridden at runtime by Task 4.3's injected @page) */
+  @page {
+    size: letter;
+    margin: 0.5in;
+  }
+
+  /* Card-format tightening — applied when body[data-print="card-4x6"] is set
+   * by Task 4.3 right before window.print(). */
+  body[data-print="card-4x6"] {
+    font-size: 8pt;
+  }
+  body[data-print="card-4x6"] h1 { font-size: 12pt; }
+  body[data-print="card-4x6"] h2 { font-size: 9pt; margin-top: 6pt; }
+  body[data-print="card-4x6"] .recipe-body ul,
+  body[data-print="card-4x6"] .recipe-body ol { padding-left: 12pt; }
+  body[data-print="card-4x6"] .description,
+  body[data-print="card-4x6"] .disclaimer,
+  body[data-print="card-4x6"] .recipe-notes,
+  body[data-print="card-4x6"] .source-credit { display: none !important; }
+}
